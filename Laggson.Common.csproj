@@ -55,6 +55,7 @@
     <Reference Include="Windows.UI" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Build.cs" />
     <Compile Include="Json\JsonExtensions.cs" />
     <Compile Include="Notifications\Classes.cs" />
     <Compile Include="Notifications\Contracts.cs" />
@@ -67,6 +68,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>cd $(ProjectDir)
+"C:\Windows\System32\WindowsPowerShell\v1.0\Powershell.exe" -executionpolicy remotesigned -File SetBuildDate.ps1</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

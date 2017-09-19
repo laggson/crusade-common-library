@@ -19,7 +19,9 @@ namespace Laggson.Common.Notifications
         public static void Init(string applicationName)
         {
             ApplicationName = applicationName;
-            TryCreateShortcut();
+
+            // Das Tutorial bestand drauf, geht aber auch ziemlich gut ohne..
+            //TryCreateShortcut();
         }
 
         private static void TryCreateShortcut()
