@@ -8,9 +8,17 @@ using Windows.UI.Notifications;
 
 namespace Laggson.Common.Notifications
 {
+    // Größtenteils https://www.whitebyte.info/programming/c/how-to-make-a-notification-from-a-c-desktop-application-in-windows-10
     public class ToastNotifier
     {
+        /// <summary>
+        /// Enthält den Namen der Anwendung, die die Toasts verwendet.
+        /// </summary>
         private static string ApplicationName { get; set; }
+        /// <summary>
+        /// Gibt an, ob die Klasse bereits initialisiert wurde.
+        /// </summary>
+        public static bool IsInitialized { get; private set; }
 
         /// <summary>
         /// Initialisiert die Klasse für die angegebene Application.
@@ -19,11 +27,14 @@ namespace Laggson.Common.Notifications
         public static void Init(string applicationName)
         {
             ApplicationName = applicationName;
-
+            IsInitialized = true;
             // Das Tutorial bestand drauf, geht aber auch ziemlich gut ohne..
             //TryCreateShortcut();
         }
 
+        /// <summary>
+        /// Versucht, einen Shortcut im Startmenü zu erstellen.
+        /// </summary>
         private static void TryCreateShortcut()
         {
             var shortcutPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
@@ -120,7 +131,7 @@ namespace Laggson.Common.Notifications
         /// <param name="message">Die anzuzeigende Nachricht.</param>
         public static void Show(MessageItem message)
         {
-            if (ApplicationName == null)
+            if (!IsInitialized)
                 throw new InvalidOperationException("Du musst zuerst die Init-Methode callen.");
 
             var templateType = GetTemplateTypeForMessage(message);
@@ -146,9 +157,9 @@ namespace Laggson.Common.Notifications
             }
 
             ToastNotification toast = new ToastNotification(toastXml);
-            toast.Activated += Toast_Activated;
-            toast.Dismissed += Toast_Dismissed;
-            toast.Failed += Toast_Failed;
+            //toast.Activated += Toast_Activated;
+            //toast.Dismissed += Toast_Dismissed;
+            //toast.Failed += Toast_Failed;
 
             ToastNotificationManager.CreateToastNotifier(ApplicationName).Show(toast);
         }

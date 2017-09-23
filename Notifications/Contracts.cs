@@ -6,6 +6,7 @@ using MS.WindowsAPICodePack.Internal;
 
 namespace Laggson.Common.Notifications
 {
+    // https://www.whitebyte.info/programming/c/how-to-make-a-notification-from-a-c-desktop-application-in-windows-10
     [ComImport,
      Guid(ShellIidGuid.PERSIST_FILE),
      InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]

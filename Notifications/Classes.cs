@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Laggson.Common.Notifications
 {
+    // https://www.whitebyte.info/programming/c/how-to-make-a-notification-from-a-c-desktop-application-in-windows-10
     internal class ErrorHelper
     {
         public static void VerifySucceeded(uint hresult)
