@@ -52,4 +52,14 @@ namespace Laggson.Common.Notifications
         STGM_DIRECT_SWMR = 0x00400000L,
         STGM_DELETEONRELEASE = 0x04000000L,
     }
+
+    public enum ToastDismissalReason
+    {
+        UserCanceled = 0,
+        ApplicationHidden = 1,
+        TimedOut = 2
+    }
+
+    public delegate void DismissedEventHandler(object sender, ToastDismissalReason reason);
+    public delegate void FailedEventHandler(object sender, Exception reason);
 }

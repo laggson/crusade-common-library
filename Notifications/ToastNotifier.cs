@@ -139,15 +139,15 @@ namespace Laggson.Common.Notifications
             XmlDocument toastXml = ToastNotificationManager.GetTemplateContent(templateType);
 
             XmlNodeList stringElements = toastXml.GetElementsByTagName("text");
-            
+
             string templateString = templateType.ToString();
             int range = int.Parse(templateString.Last().ToString());
             stringElements[0].AppendChild(toastXml.CreateTextNode(message.Header));
 
-            if(range >= 2)
+            if (range >= 2)
                 stringElements[1].AppendChild(toastXml.CreateTextNode(message.Message1));
 
-            if(range >= 4)
+            if (range >= 4)
                 stringElements[2].AppendChild(toastXml.CreateTextNode(message.Message2));
 
             if (!string.IsNullOrEmpty(message.ImagePath))
@@ -157,26 +157,30 @@ namespace Laggson.Common.Notifications
             }
 
             ToastNotification toast = new ToastNotification(toastXml);
-            //toast.Activated += Toast_Activated;
-            //toast.Dismissed += Toast_Dismissed;
-            //toast.Failed += Toast_Failed;
+            toast.Activated += Toast_Activated;
+            toast.Dismissed += Toast_Dismissed;
+            toast.Failed += Toast_Failed;
 
             ToastNotificationManager.CreateToastNotifier(ApplicationName).Show(toast);
         }
 
+        public static event EventHandler ToastClicked;
+        public static event DismissedEventHandler ToastDismissed;
+        public static event FailedEventHandler ToastFailed;
+
         private static void Toast_Activated(ToastNotification sender, object args)
         {
-            //throw new NotImplementedException();
+            ToastClicked?.Invoke(sender, EventArgs.Empty);
         }
 
         private static void Toast_Dismissed(ToastNotification sender, ToastDismissedEventArgs args)
         {
-            //throw new NotImplementedException();
+            ToastDismissed?.Invoke(sender, (ToastDismissalReason)(int)args.Reason);
         }
 
         private static void Toast_Failed(ToastNotification sender, ToastFailedEventArgs args)
         {
-            //throw new NotImplementedException();
+            ToastFailed?.Invoke(sender, args.ErrorCode);
         }
     }
 }
