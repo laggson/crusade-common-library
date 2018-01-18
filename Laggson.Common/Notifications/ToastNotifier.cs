@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using Windows.Data.Xml.Dom;
 using Windows.UI.Notifications;
+using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 
 namespace Laggson.Common.Notifications
 {
@@ -29,8 +30,9 @@ namespace Laggson.Common.Notifications
             ApplicationName = applicationName;
             IsInitialized = true;
             // Das Tutorial bestand drauf, geht aber auch ziemlich gut ohne..
-            //TryCreateShortcut();
-        }
+            //Edit: Seit 1709 nicht mehr so..
+            TryCreateShortcut();
+      }
 
         /// <summary>
         /// Versucht, einen Shortcut im Startmenü zu erstellen.
@@ -63,8 +65,8 @@ namespace Laggson.Common.Notifications
 
             using (var appId = new PropVariant(ApplicationName))
             {
-                //ErrorHelper.VerifySucceeded(shortcutProperties.SetValue(SystemProperties.System.AppUserModel.ID, appId));
-                ErrorHelper.VerifySucceeded(shortcutProperties.Commit());
+               ErrorHelper.VerifySucceeded(shortcutProperties.SetValue(SystemProperties.System.AppUserModel.ID, appId));
+               ErrorHelper.VerifySucceeded(shortcutProperties.Commit());
             }
 
             IPersistFile shortcutSave = (IPersistFile)shortcut;
@@ -134,6 +136,9 @@ namespace Laggson.Common.Notifications
             if (!IsInitialized)
                 throw new InvalidOperationException("Du musst zuerst die Init-Methode callen.");
 
+            Show();
+           return;
+
             var templateType = GetTemplateTypeForMessage(message);
 
             XmlDocument toastXml = ToastNotificationManager.GetTemplateContent(templateType);
@@ -163,6 +168,29 @@ namespace Laggson.Common.Notifications
 
             ToastNotificationManager.CreateToastNotifier(ApplicationName).Show(toast);
         }
+
+       /// <summary>
+       /// Zum Testen, da das seit dem FCU nicht mehr geht. Hilft aber auch nicht.
+       /// </summary>
+       private static void Show()
+       {
+          ToastTemplateType toastTemplate = ToastTemplateType.ToastText02;
+          XmlDocument toastXml = ToastNotificationManager.GetTemplateContent(toastTemplate);
+
+          XmlNodeList toastTextElements = toastXml.GetElementsByTagName("text");
+
+          toastTextElements[0].AppendChild(toastXml.CreateTextNode("Toast Title"));
+          toastTextElements[1].AppendChild(toastXml.CreateTextNode("Toast Description"));
+
+
+          ToastNotification toast = new ToastNotification(toastXml);
+          toast.ExpirationTime = DateTimeOffset.UtcNow.AddSeconds(30);
+          toast.Failed += (o, args) => {
+             var message = args.ErrorCode;
+          };
+
+          ToastNotificationManager.CreateToastNotifier().Show(toast);
+      }
 
         public static event EventHandler ToastClicked;
         public static event DismissedEventHandler ToastDismissed;
