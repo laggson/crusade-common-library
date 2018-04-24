@@ -1,6 +1,6 @@
 # Gets the line with the build date from Build.cs and replaces it with today
 $path = ".\Build.cs"
-$lineLike = "*static string Date*"
+$lineLike = "*public const string Date*"
 
 $wholeFile = Get-Content $path
 
