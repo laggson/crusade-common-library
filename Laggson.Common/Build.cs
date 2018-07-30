@@ -5,6 +5,6 @@ namespace Laggson.Common
        /// <summary>
        /// Gibt das Datum an, an dem das Projekt zuletzt erstellt wurde. Wird beim Build gesetzt.
        /// </summary>
-       public const string Date = "23.01.2018";
+       public const string Date = "30.07.2018";
     }
 }

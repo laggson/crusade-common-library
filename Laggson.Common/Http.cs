@@ -59,7 +59,7 @@ namespace Laggson.Common
                if (e is WebException we)
                   throw we;
 
-               return default;
+               return default(T);
             }
 
          }

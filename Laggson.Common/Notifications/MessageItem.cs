@@ -25,7 +25,7 @@
             Header = header.Trim();
             Message1 = message1.Trim();
             Message2 = message2.Trim();
-            ImagePath = imagePath.Trim();
+            ImagePath = imagePath?.Trim();
         }
     }
 }
