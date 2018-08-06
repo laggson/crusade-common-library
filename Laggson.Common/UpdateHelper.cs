@@ -9,18 +9,18 @@ namespace Laggson.Common
    public static class UpdateHelper
    {
       private const string API_URL = "http://h2608125.stratoserver.net:5000/api/";
-      private static string MainDir => Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Laggson Softworks";
-      private static string UpdateDir => MainDir + @"\Common";
+      private static readonly string _mainDir = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Laggson Softworks";
+      private static readonly string _updateDir = _mainDir + @"\Common";
 
       /// <summary>
       /// Prüft, ob das Verzeichnis und die Datei des Updaters vorhanden sind und erstellt sie andernfalls.
       /// </summary>
       public static void InstallUpdater()
       {
-         if (!Directory.Exists(UpdateDir))
-            Directory.CreateDirectory(UpdateDir);
+         if (!Directory.Exists(_updateDir))
+            Directory.CreateDirectory(_updateDir);
 
-         if (!File.Exists(UpdateDir + @"Updater.exe"))
+         if (!File.Exists(_updateDir + @"Updater.exe"))
             RetrieveUpdater();
 
       }
@@ -111,7 +111,7 @@ namespace Laggson.Common
          {
             using (var client = new WebClient())
             {
-               client.DownloadFile(new Uri(updFilePath), UpdateDir + @"\Updater.exe");
+               client.DownloadFile(new Uri(updFilePath), _updateDir + @"\Updater.exe");
             }
          }
          catch (WebException e) when (e.Message.Contains("404"))
@@ -131,11 +131,16 @@ namespace Laggson.Common
              || version == null || version.Major == -1 || version.Minor == -1)
             throw new ArgumentException("Die eingegebenen Werte müssen gültig sein.");
 
-         string args = $"Name={name};Version={version.ToString()};Path=\"{path}\"";
+         string args = $"Name={name};Version={version};Path=\"{path}\"";
 
-         Process p = new Process();
-         p.StartInfo.FileName = UpdateDir + @"\Updater.exe";
-         p.StartInfo.Arguments = args;
+         Process p = new Process
+         {
+            StartInfo = new ProcessStartInfo
+            {
+               FileName = _updateDir + @"\Updater.exe",
+               Arguments = args
+            }
+         };
 
          p.Start();
       }
