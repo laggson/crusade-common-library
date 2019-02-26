@@ -8,9 +8,9 @@ namespace Laggson.Common.Json
     {
         public static T FromJson<T>(this string source)
         {
-            var result = JsonConvert.DeserializeObject(source);
+            var result = JsonConvert.DeserializeObject<T>(source);
 
-            return (T)result;
+            return result;
         }
 
         public static IEnumerable<T> FromJsonArray<T>(this string source)
